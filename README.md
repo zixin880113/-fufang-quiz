@@ -1,2 +1,5 @@
-# -fufang-quiz
-Test
+# 輻防員刷題
+
+輻射防護員歷年法規題庫（109～115 年，360 題）。可安裝到手機主畫面，離線使用。
+
+網址：https://zixin880113.github.io/-fufang-quiz/
