@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>每日學習回報</title>
+<meta name="theme-color" content="#2c5f8d">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="每日回報">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: single narrow column, form on top, generated report card below, built for one-thumb use */
+:root {
+  --bg: #f3f5f7;
+  --surface: #ffffff;
+  --fg: #1d2630;
+  --muted: #5d6b79;
+  --line: #d7dde3;
+  --en: #2c5f8d;
+  --en-soft: #e3edf6;
+  --jp: #b8512f;
+  --jp-soft: #f7e6de;
+  --ok: #2f7d52;
+  --font-body: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12181e;
+    --surface: #1b232b;
+    --fg: #e8edf1;
+    --muted: #96a4b1;
+    --line: #2f3b46;
+    --en: #7db4e6;
+    --en-soft: #1f3345;
+    --jp: #f0916e;
+    --jp-soft: #3d2a22;
+    --ok: #6fcf97;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12181e;
+  --surface: #1b232b;
+  --fg: #e8edf1;
+  --muted: #96a4b1;
+  --line: #2f3b46;
+  --en: #7db4e6;
+  --en-soft: #1f3345;
+  --jp: #f0916e;
+  --jp-soft: #3d2a22;
+  --ok: #6fcf97;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  padding-block: 24px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+main { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+h1 { font-size: 1.5rem; margin: 0; line-height: 1.3; text-wrap: balance; }
+.sub { margin: 4px 0 0; color: var(--muted); font-size: 0.9rem; }
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.panel h2 {
+  margin: 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.panel h2::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--dot, var(--muted)); }
+.p-en { --dot: var(--en); }
+.p-en h2 { color: var(--en); }
+.p-jp { --dot: var(--jp); }
+.p-jp h2 { color: var(--jp); }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.field.wide { grid-column: 1 / -1; }
+label { font-size: 0.85rem; color: var(--muted); }
+select, input[type="text"] {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  font: inherit;
+  color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+select:focus-visible, input:focus-visible, button:focus-visible {
+  outline: 3px solid var(--en);
+  outline-offset: 2px;
+}
+.rest {
+  background: var(--en-soft);
+  color: var(--fg);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+}
+.report-card { border-color: var(--en); }
+.report-card h2 { color: var(--fg); }
+.report-card h2::before { background: var(--ok); }
+pre.report {
+  margin: 0;
+  padding: 12px;
+  background: var(--bg);
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  user-select: all;
+}
+.total {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+button.copy {
+  min-height: 48px;
+  font: inherit;
+  font-weight: 700;
+  color: #fff;
+  background: var(--en);
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+}
+:root[data-theme="dark"] button.copy { color: #0d1620; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) button.copy { color: #0d1620; } }
+button.copy:active { transform: translateY(1px); }
+.hint { margin: 0; font-size: 0.85rem; color: var(--muted); }
+.hint.ok { color: var(--ok); }
+@media (prefers-reduced-motion: no-preference) {
+  button.copy { transition: transform 0.08s ease; }
+}
+</style>
+<style>
+html{-webkit-text-size-adjust:100%}
+body{margin:0;padding-top:calc(24px + env(safe-area-inset-top,0px));padding-bottom:calc(40px + env(safe-area-inset-bottom,0px))}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+
+
+<main>
+  <header>
+    <h1>每日學習回報</h1>
+    <p class="sub">用選的就好。選完複製，貼回對話，我來幫你算進度與調整。</p>
+  </header>
+
+  <section class="panel">
+    <div class="row">
+      <div class="field">
+        <label for="day">日期</label>
+        <select id="day">
+          <option>週一</option><option>週二</option><option>週三</option><option>週四</option>
+          <option>週五</option><option>週六</option><option>週日</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="status">今天狀態</label>
+        <select id="status">
+          <option>很順</option>
+          <option selected>還行</option>
+          <option>有點累</option>
+          <option>很沒動力</option>
+          <option>休息日</option>
+        </select>
+      </div>
+    </div>
+    <div id="restNote" class="rest" hidden>今天選了休息日，不計入進度，英文與日文欄位會先略過。</div>
+  </section>
+
+  <section class="panel p-en" id="enPanel">
+    <h2>英文 多益</h2>
+    <div class="row">
+      <div class="field">
+        <label for="enHours">時數</label>
+        <select id="enHours"></select>
+      </div>
+      <div class="field">
+        <label for="enTopic">內容</label>
+        <select id="enTopic">
+          <option>Part 5 文法</option>
+          <option>Part 6 填空</option>
+          <option>Part 7 閱讀</option>
+          <option>錯題本複習</option>
+          <option>整份模考</option>
+          <option>單字</option>
+          <option>聽力維持</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="enCount">做了幾題</label>
+        <select id="enCount"></select>
+      </div>
+      <div class="field">
+        <label for="enWrong">錯幾題</label>
+        <select id="enWrong"></select>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel p-jp" id="jpPanel">
+    <h2>日文 N5</h2>
+    <div class="row">
+      <div class="field">
+        <label for="jpHours">時數</label>
+        <select id="jpHours"></select>
+      </div>
+      <div class="field">
+        <label for="jpTopic">內容</label>
+        <select id="jpTopic">
+          <option>平假名複習</option>
+          <option>片假名複習</option>
+          <option>易混字 シ/ツ、ソ/ン</option>
+          <option>單字</option>
+          <option>助詞 は、が、を</option>
+          <option>基礎句型</option>
+          <option>聽日文</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="field">
+      <label for="note">補充（可不填）</label>
+      <input id="note" type="text" placeholder="例如：Part 7 後半讀不完">
+    </div>
+  </section>
+
+  <section class="panel report-card" aria-live="polite">
+    <h2>要貼給 Claude 的回報</h2>
+    <pre class="report" id="report"></pre>
+    <div class="total" id="total"></div>
+    <button class="copy" id="copyBtn" type="button">複製回報</button>
+    <p class="hint" id="hint">選項一改，上面的文字會自動更新。</p>
+  </section>
+</main>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var hoursOpts = [0, 0.5, 1, 1.5, 2, 2.5, 3];
+  var countOpts = [0, 5, 10, 15, 20, 25, 30, 40, 50, 100];
+  var days = ["週日", "週一", "週二", "週三", "週四", "週五", "週六"];
+
+  function fill(sel, list, def, fmt) {
+    list.forEach(function (v) {
+      var o = document.createElement("option");
+      o.value = v;
+      o.textContent = fmt ? fmt(v) : v;
+      if (v === def) o.selected = true;
+      sel.appendChild(o);
+    });
+  }
+  var hFmt = function (v) { return v + " 小時"; };
+  var cFmt = function (v) { return v + " 題"; };
+  fill($("enHours"), hoursOpts, 1, hFmt);
+  fill($("jpHours"), hoursOpts, 0.5, hFmt);
+  fill($("enCount"), countOpts, 20, cFmt);
+  fill($("enWrong"), [0,1,2,3,4,5,6,7,8,9,10,15,20,30], 0, cFmt);
+
+  $("day").value = days[new Date().getDay()];
+
+  function build() {
+    var rest = $("status").value === "休息日";
+    $("restNote").hidden = !rest;
+    var eh = Number($("enHours").value);
+    var jh = Number($("jpHours").value);
+    var cnt = Number($("enCount").value);
+    var wr = Number($("enWrong").value);
+    var lines = ["日期：" + $("day").value];
+
+    if (rest) {
+      lines.push("今天休息");
+    } else {
+      var en = $("enTopic").value;
+      if (eh === 0) {
+        lines.push("英文：0 小時（今天沒讀）");
+      } else {
+        var detail = en;
+        if (cnt > 0) detail += "，做了 " + cnt + " 題，錯 " + Math.min(wr, cnt) + " 題";
+        lines.push("英文：" + eh + " 小時（" + detail + "）");
+      }
+      if (jh === 0) {
+        lines.push("日文：0 小時（今天沒讀）");
+      } else {
+        lines.push("日文：" + jh + " 小時（" + $("jpTopic").value + "）");
+      }
+    }
+    lines.push("狀態：" + $("status").value);
+    var note = $("note").value.trim();
+    if (note) lines.push("補充：" + note);
+
+    $("report").textContent = lines.join("\n");
+    $("total").textContent = rest ? "" : "今日合計 " + (eh + jh) + " 小時（英文 " + eh + " ＋ 日文 " + jh + "）";
+    $("enPanel").style.opacity = rest ? "0.5" : "1";
+    $("jpPanel").style.opacity = rest ? "0.5" : "1";
+  }
+
+  ["day","status","enHours","enTopic","enCount","enWrong","jpHours","jpTopic"].forEach(function (id) {
+    $(id).addEventListener("change", build);
+  });
+  $("note").addEventListener("input", build);
+
+  function selectReport() {
+    var r = document.createRange();
+    r.selectNodeContents($("report"));
+    var s = window.getSelection();
+    s.removeAllRanges();
+    s.addRange(r);
+  }
+
+  $("copyBtn").addEventListener("click", function () {
+    var text = $("report").textContent;
+    var hint = $("hint");
+    function done(ok) {
+      if (ok) {
+        hint.textContent = "已複製。回到對話貼上送出即可。";
+        hint.className = "hint ok";
+      } else {
+        selectReport();
+        hint.textContent = "沒辦法自動複製，文字已選取，請長按選「拷貝」。";
+        hint.className = "hint";
+      }
+    }
+    try {
+      navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
+    } catch (e) { done(false); }
+  });
+
+  build();
+})();
+</script>
+
+
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
+</body>
+</html>
